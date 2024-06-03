@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import commonContext from '../../contexts/common/commonContext';
@@ -23,6 +23,16 @@ const AccountForm = () => {
     const [isSignupVisible, setIsSignupVisible] = useState(false);
     const [signupEmail, setSignupEmail] = useState('');
     const [signupPassword, setSignupPassword] = useState('');
+
+    // Check if user is already logged in
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const user = sessionStorage.getItem('userDetails');
+        if (user) {
+            setIsLoggedIn(true);
+        }
+    }, []);
 
     // Function to update header with user details
     const updateHeader = (userData) => {
@@ -50,14 +60,15 @@ const AccountForm = () => {
                     email: inputValues.mail,
                     password: inputValues.password
                 });
-                const userData = response.data.user;
+                const userData = response.data;
                 // Update header with user details
                 updateHeader(userData);
-                // Store user details in local storage
-                localStorage.setItem('userDetails', JSON.stringify(userData));
+                // Store user details in session storage
+                sessionStorage.setItem('userDetails', JSON.stringify(userData));
                 toast.success("Login Successfully");
                 navigate("/");
                 toggleForm(false);
+                setIsLoggedIn(true);
             } catch (error) {
                 console.error('Login error:', error.response ? error.response.data : error.message);
                 toast.warning("Email or Password is not correct");
@@ -78,17 +89,31 @@ const AccountForm = () => {
                     password: inputValues.password,
                     mobile: inputValues.mobile
                 });
+                const userData = response.data;
                 toast.success("Signup Successfully");
 
                 setSignupEmail(inputValues.email);
                 setSignupPassword(inputValues.password);
 
+                // Store user details in session storage
+                sessionStorage.setItem('userDetails', JSON.stringify(userData));
+
                 setIsSignupVisible(false); // Switch to login form
+                setIsLoggedIn(true);
+                toggleForm(false);
+                navigate("/");
             } catch (error) {
                 console.error('Signup error:', error.response ? error.response.data : error.message);
                 toast.warning("Signup failed, please try again");
             }
         }
+    };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('userDetails');
+        setIsLoggedIn(false);
+        navigate("/");
+        toast.success("Logged out successfully");
     };
 
     return (
@@ -235,6 +260,9 @@ const AccountForm = () => {
                 </div>
             )}
             <ToastContainer />
+            <button onClick={handleLogout} className="btn logout_btn">
+                Logout
+            </button>
         </>
     );
 };

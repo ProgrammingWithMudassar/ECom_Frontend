@@ -12,11 +12,9 @@ const Header = () => {
     const { cartItems } = useContext(cartContext);
     const [isSticky, setIsSticky] = useState(false);
     const [userDetails, setUserDetails] = useState(null);
-    const updateUserDetails = (userData) => {
-        setUserDetails(userData);
-    };
+
     useEffect(() => {
-        const storedUserDetails = localStorage.getItem('userDetails');
+        const storedUserDetails = sessionStorage.getItem('userDetails');
         if (storedUserDetails) {
             try {
                 const parsedUserDetails = JSON.parse(storedUserDetails);
@@ -37,7 +35,7 @@ const Header = () => {
 
     // Logout function
     const handleLogout = () => {
-        localStorage.removeItem('userDetails');
+        sessionStorage.removeItem('userDetails');
         setUserDetails(null);
     };
 

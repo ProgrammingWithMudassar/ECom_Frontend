@@ -7,9 +7,12 @@ import Home from '../pages/Home';
 import ProductDetails from '../pages/ProductDetails';
 import ErrorPage from '../pages/ErrorPage';
 import Dashboard from '../pages/Dashboard';
-import '../style.css'
-const RouterRoutes = () => {
+import Orders from '../pages/Orders';
+import Wishlist from '../pages/Wishlist';
+import PrivateRoute from '../utils/PrivateRoute';
+import '../style.css';
 
+const RouterRoutes = () => {
     useScrollRestore();
 
     return (
@@ -20,7 +23,30 @@ const RouterRoutes = () => {
                 <Route path="/all-products" element={<AllProducts />} />
                 <Route path="/product-details/:productId" element={<ProductDetails />} />
                 <Route path="*" element={<ErrorPage />} />
-                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route
+                    path="/dashboard/*"
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/orders"
+                    element={
+                        <PrivateRoute>
+                            <Orders />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/wishlist"
+                    element={
+                        <PrivateRoute>
+                            <Wishlist />
+                        </PrivateRoute>
+                    }
+                />
             </Routes>
         </>
     );
