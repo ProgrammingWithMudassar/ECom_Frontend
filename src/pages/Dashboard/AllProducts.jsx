@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Space, Table, message } from 'antd';
+import { Button, Input, Modal, Space, Table, message, Rate } from 'antd';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -173,6 +173,7 @@ const AllProducts = () => {
       dataIndex: 'price',
       key: 'price',
       width: '20%',
+      render: (price) => `$${price}`,
       ...getColumnSearchProps('price'),
     },
     {
@@ -189,13 +190,9 @@ const AllProducts = () => {
       width: 150,
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => navigate(`/update-product/${record._id}`)}>Update</Button>
-          <Button type="primary" danger onClick={() => showDeleteConfirm(record._id)}>
-            Delete
-          </Button>
-          <Button type="default" onClick={() => handleShowDetails(record._id)}>
-            Detail
-          </Button>
+          <Button  type="primary" onClick={() => handleShowDetails(record._id)}>Detail</Button>
+          <Button type="primary" danger onClick={() => showDeleteConfirm(record._id)}>Delete</Button>
+          <Button type="primary" onClick={() => navigate(`/dashboard/update-product/${record._id}`)}>Update</Button>
         </Space>
       ),
     },
@@ -237,7 +234,7 @@ const AllProducts = () => {
               </tr>
               <tr>
                 <td style={{ border: '1px solid #ddd', padding: 8 }}><strong>Price:</strong></td>
-                <td style={{ border: '1px solid #ddd', padding: 8 }}>{selectedProduct.price}</td>
+                <td style={{ border: '1px solid #ddd', padding: 8 }}>${selectedProduct.price}</td>
               </tr>
               <tr>
                 <td style={{ border: '1px solid #ddd', padding: 8 }}><strong>Category:</strong></td>
@@ -261,11 +258,11 @@ const AllProducts = () => {
               </tr>
               <tr>
                 <td style={{ border: '1px solid #ddd', padding: 8 }}><strong>Total Rating:</strong></td>
-                <td style={{ border: '1px solid #ddd', padding: 8 }}>{selectedProduct.totalrating}</td>
+                <td style={{ border: '1px solid #ddd', padding: 8 }}><Rate disabled defaultValue={selectedProduct.totalrating} /></td>
               </tr>
               <tr>
                 <td style={{ border: '1px solid #ddd', padding: 8 }}><strong>Warranty:</strong></td>
-                <td style={{ border: '1px solid #ddd', padding: 8 }}>{selectedProduct.warranty}</td>
+                <td style={{ border: '1px solid #ddd', padding: 8 }}>{selectedProduct.warranty} years</td>
               </tr>
               <tr>
                 <td style={{ border: '1px solid #ddd', padding: 8 }}><strong>Return Policy:</strong></td>

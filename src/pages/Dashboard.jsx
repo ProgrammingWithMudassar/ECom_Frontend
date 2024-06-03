@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+
 // Routes
 import { Routes, Route, Link } from 'react-router-dom';
 import AllUser from './Dashboard/AllUsers';
@@ -24,6 +25,8 @@ import ReturnProducts from './Dashboard/ReturnProducts';
 import AllOrders from './Dashboard/AllOrders';
 import DashboardPage from './Dashboard/DashboardPage';
 import AddProduct from './Dashboard/AddProduct'
+import UpdateProduct from './Dashboard/UpdateProduct'
+
 // Icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupIcon from '@mui/icons-material/Group';
@@ -56,12 +59,12 @@ export default function ResponsiveDrawer(props) {
       <List>
         {[
           { text: 'Dashboard', icon: <DashboardIcon />, link: '/dashboard/main' },
-          { text: 'All Users', icon: <GroupIcon />, link: '/dashboard/all-users' },
+          { text: 'Users', icon: <GroupIcon />, link: '/dashboard/all-users' },
           { text: 'Products', icon: <ShoppingCartIcon />, link: '/dashboard/products' },
-          { text: 'Delivery', icon: <LocalShippingIcon />, link: '/dashboard/delivery' },
-          { text: 'Return Products', icon: <AssignmentReturnIcon />, link: '/dashboard/return-products' },
-          { text: 'All Orders', icon: <ListAltIcon />, link: '/dashboard/all-orders' },
-          { text: 'Complains', icon: <RecordVoiceOverIcon />, link: '/dashboard/complains' },
+          // { text: 'Delivery', icon: <LocalShippingIcon />, link: '/dashboard/delivery' },
+          // { text: 'Return Products', icon: <AssignmentReturnIcon />, link: '/dashboard/return-products' },
+          { text: 'Orders', icon: <ListAltIcon />, link: '/dashboard/all-orders' },
+          // { text: 'Complains', icon: <RecordVoiceOverIcon />, link: '/dashboard/complains' },
           { text: 'Logout', icon: <ExitToAppIcon />, link: '/dashboard/logout' },
         ].map((item) => (
           <ListItem key={item.text} disablePadding>
@@ -151,6 +154,7 @@ export default function ResponsiveDrawer(props) {
 
           <Route path="/products" element={<AllProducts />} />
           <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/update-product/:id" element={<UpdateProduct />} />
           
           <Route path="/delivery" element={<AllDelievery />} />
           <Route path="/return-products" element={<ReturnProducts />} />

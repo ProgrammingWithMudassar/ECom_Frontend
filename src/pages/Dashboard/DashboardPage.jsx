@@ -1,28 +1,45 @@
-import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { Typography, Box } from '@mui/material';
-import Grid from '@mui/material/Grid';
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, Typography, Box, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LoginIcon from '@mui/icons-material/Login';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'; // For products
-import ReplayIcon from '@mui/icons-material/Replay'; // For returns
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import ReplayIcon from '@mui/icons-material/Replay';
 import { Link } from 'react-router-dom';
-
-
+import axios from 'axios';
 
 const DashboardPage = () => {
-  // Sample data for the cards
+  const [dashboardData, setDashboardData] = useState({
+    totalUsers: 0,
+    totalOrders: 0,
+    totalProducts: 0,
+    recentProducts: [],
+    recentUsers: []
+  });
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/dashboard/data');
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  // Updated card data with dynamic values
   const cardData = [
-    { title: 'Orders', number: 120, icon: <ShoppingCartIcon />, link:"/dashboard/all-orders" },
-    { title: 'User Logins', number: 80, icon: <LoginIcon />, link:"/dashboard/all-users" },
-    { title: 'Products', number: 200, icon: <ProductionQuantityLimitsIcon />, link:"/dashboard/products" },
-    { title: 'Returns', number: 30, icon: <ReplayIcon />, link:"/dashboard/return-products" }
+    { title: 'Active Orders', number: dashboardData?.totalOrders, icon: <ShoppingCartIcon />, link: "/dashboard/all-orders" },
+    { title: 'Active Users', number: dashboardData?.totalUsers, icon: <LoginIcon />, link: "/dashboard/all-users" },
+    { title: 'Listed Products', number: dashboardData?.totalProducts, icon: <ProductionQuantityLimitsIcon />, link: "/dashboard/products" },
+    { title: 'Blocked Users', number: dashboardData?.blockedUsers , icon: <ReplayIcon />, link: "/dashboard/all-users" }, // Changed icon to ReplayIcon
   ];
+  
 
   return (
     <>
-
       <Grid container spacing={2}>
         {cardData.map((data, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
@@ -48,15 +65,53 @@ const DashboardPage = () => {
         ))}
       </Grid>
 
-
-
       <Box sx={{ mt: 10 }}>
         <Grid container spacing={2}>
-          <Grid item xs={6} sx={{ width: '100%', height: '300px', bgcolor: 'gray' }}>
-            asdf
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Recent Products</Typography>
+            <TableContainer component={Paper} sx={{ minHeight: '322px' }}>
+              <Table sx={{ minHeight: '300px' }}>
+                <TableHead sx={{ background: 'red' }}>
+                  <TableRow>
+                    <TableCell sx={{ fontSize: 'bold', color: '#fff' }}>Title</TableCell>
+                    <TableCell sx={{ fontSize: 'bold', color: '#fff' }}>Price</TableCell>
+                    <TableCell sx={{ fontSize: 'bold', color: '#fff' }}>Category</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dashboardData.recentProducts.map((product) => (
+                    <TableRow key={product._id}>
+                      <TableCell>{product.title}</TableCell>
+                      <TableCell>{product.price}</TableCell>
+                      <TableCell>{product.category}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
-          <Grid item xs={6} sx={{ width: '100%', height: '300px', bgcolor: 'gray' }}>
-            asdf
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Recent Users</Typography>
+            <TableContainer component={Paper} sx={{ minHeight: '322px' }}>
+              <Table >
+                <TableHead>
+                  <TableRow sx={{ background: 'red' }}>
+                    <TableCell sx={{ fontSize: 'bold', color: '#fff' }}>First Name</TableCell>
+                    <TableCell sx={{ fontSize: 'bold', color: '#fff' }}>Last Name</TableCell>
+                    <TableCell sx={{ fontSize: 'bold', color: '#fff' }}>Email</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dashboardData.recentUsers.map((user) => (
+                    <TableRow key={user._id}>
+                      <TableCell>{user.firstname}</TableCell>
+                      <TableCell>{user.lastname}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
       </Box>

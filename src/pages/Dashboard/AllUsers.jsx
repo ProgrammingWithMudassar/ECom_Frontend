@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, message, Button, Modal } from 'antd';
 import axios from 'axios';
 
+const { confirm } = Modal;
+
 const DataTable = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,6 +79,19 @@ const DataTable = () => {
     }
   };
 
+  const showDeleteConfirm = (key) => {
+    confirm({
+      title: 'Are you sure you want to delete this user?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        handleDelete(key);
+      },
+    });
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -106,13 +121,20 @@ const DataTable = () => {
     {
       title: 'Action',
       key: 'action',
-      width: 200,
+      width: 250,
       render: (_, record) => (
         <Space size="middle">
           <Button
             type="primary"
+            onClick={() => handleRowClick(record.key)}
+            style={{ cursor: 'pointer' }}
+          >
+            Detail
+          </Button>
+          <Button
+            type="primary"
             danger
-            onClick={() => handleDelete(record.key)}
+            onClick={() => showDeleteConfirm(record.key)}
             loading={deletingKeys.includes(record.key)}
             disabled={deletingKeys.includes(record.key)}
             style={{ cursor: 'pointer' }}
@@ -133,13 +155,6 @@ const DataTable = () => {
     },
   ];
 
-  const rowSelection = {
-    onRow: (record) => ({
-      onClick: () => handleRowClick(record.key),
-      style: { height: '30px' }, // Set the row height here
-    }),
-  };
-
   return (
     <div style={{ height: "calc(100vh - 100px)", width: '100%', backgroundColor: 'white' }}>
       <Table 
@@ -148,7 +163,6 @@ const DataTable = () => {
         loading={loading} 
         pagination={{ pageSize: 8 }} 
         rowClassName={() => 'custom-row-height'} 
-        onRow={rowSelection.onRow}
       />
       <Modal
         title="User Details"
