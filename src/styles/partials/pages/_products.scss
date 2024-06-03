@@ -46,7 +46,9 @@
     overflow: hidden;
 
     img {
-        width: 70%;
+        width: 100%;
+        max-height: 300px;
+        object-fit: contain;
         @include transition(transform, 0.25s, ease);
 
         &:hover {

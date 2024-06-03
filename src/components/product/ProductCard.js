@@ -32,7 +32,7 @@ const ProductCard = (props) => {
 
     return (
         <>
-            <div className="card products_card">
+            <div className=" products_card">
                 <figure className="products_img">
                     <Link to={`/product-details/${_id}`}>
                         <img src={images?.[0]?.url} alt="product-img" />
