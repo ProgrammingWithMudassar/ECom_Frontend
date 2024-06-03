@@ -18,7 +18,7 @@ const Cart = () => {
 
     // total original price
     const cartTotal = cartItems.map(item => {
-        return item.originalPrice * item.quantity;
+        return item.price * item.quantity;
     });
 
     const calculateCartTotal = calculateTotal(cartTotal);
@@ -27,7 +27,7 @@ const Cart = () => {
 
     // total discount
     const cartDiscount = cartItems.map(item => {
-        return (item.originalPrice - item.finalPrice) * item.quantity;
+        return (item.discountPrice) * item.quantity;
     });
 
     const calculateCartDiscount = calculateTotal(cartDiscount);
