@@ -11,14 +11,13 @@ const initialState = {
 
 // Cart-Provider Component
 const CartProvider = ({ children }) => {
-
     const [state, dispatch] = useReducer(cartReducer, initialState);
 
     // Dispatched Actions
     const addItem = (item) => {
         return dispatch({
             type: 'ADD_TO_CART',
-            payload: { item }
+            payload: { item: { ...item, quantity: 1 } }
         });
     };
 
@@ -30,17 +29,23 @@ const CartProvider = ({ children }) => {
     };
 
     const incrementItem = (itemId) => {
-        return dispatch({
+        dispatch({
             type: 'INCREMENT_ITEM',
             payload: { itemId }
         });
+
+        const updatedItem = state.cartItems.find(item => item.id === itemId);
+        return updatedItem.quantity;
     };
 
     const decrementItem = (itemId) => {
-        return dispatch({
+        dispatch({
             type: 'DECREMENT_ITEM',
             payload: { itemId }
         });
+
+        const updatedItem = state.cartItems.find(item => item.id === itemId);
+        return updatedItem.quantity;
     };
 
     // Context values
@@ -58,7 +63,6 @@ const CartProvider = ({ children }) => {
         </cartContext.Provider>
     );
 };
-
 
 export default cartContext;
 export { CartProvider };

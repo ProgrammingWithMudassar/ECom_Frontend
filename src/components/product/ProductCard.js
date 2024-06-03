@@ -8,7 +8,7 @@ import useActive from '../../hooks/useActive';
 
 const ProductCard = (props) => {
 
-    const { id, images, title, info, finalPrice, originalPrice, rateCount, path } = props;
+    const { id, _id, images, title, info, price, discountPrice, rateCount, path } = props;
 
     const { addItem } = useContext(cartContext);
     const { active, handleActive, activeClass } = useActive(false);
@@ -26,16 +26,16 @@ const ProductCard = (props) => {
         }, 3000);
     };
 
-    const newPrice = displayMoney(finalPrice);
-    const oldPrice = displayMoney(originalPrice);
+    const newPrice = displayMoney(price);
+    const oldPrice = displayMoney(discountPrice);
 
 
     return (
         <>
             <div className="card products_card">
                 <figure className="products_img">
-                    <Link to={`${path}${id}`}>
-                        <img src={images[0]} alt="product-img" />
+                    <Link to={`/product-details/${_id}`}>
+                        <img src={images?.[0]?.url} alt="product-img" />
                     </Link>
                 </figure>
                 <div className="products_details">
@@ -45,7 +45,7 @@ const ProductCard = (props) => {
                         }
                     </span>
                     <h3 className="products_title">
-                        <Link to={`${path}${id}`}>{title}</Link>
+                        <Link to={`/product-details/${_id}`}>{title}</Link>
                     </h3>
                     <h5 className="products_info">{info}</h5>
                     <div className="separator"></div>

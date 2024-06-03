@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BsArrowRight } from 'react-icons/bs';
 import useActive from '../../hooks/useActive';
@@ -10,6 +10,24 @@ const TopProducts = () => {
 
     const [products, setProducts] = useState(productsData);
     const { activeClass, handleActive } = useActive(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:5000/api/product/get-all-products");
+                const json = await response.json();
+                console.log("json::", json);
+                setProducts(json)
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+
 
     // making a unique set of product's category
     const productsCategory = [

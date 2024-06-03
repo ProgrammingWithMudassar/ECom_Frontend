@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y } from 'swiper';
 import productsData from '../../data/productsData';
@@ -10,9 +10,25 @@ import 'swiper/scss/pagination';
 
 const RelatedSlider = (props) => {
 
+    const [products, setProducts] = useState(productsData);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:5000/api/product/get-all-products");
+                const json = await response.json();
+                console.log("json::", json);
+                setProducts(json)
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const { category } = props;
 
-    const relatedProduct = productsData.filter(item => item.category === category);
+    const relatedProduct = products.filter(item => item.category === category);
 
     return (
         <Swiper
